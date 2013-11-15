@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>FlashDeals</title>
+  <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+  <%= csrf_meta_tags %>
+
+  
+
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	
+
+</head>
+	
+
+<body>
+
+
+	<% if user_signed_in? %>
+		Signed in as <%= current_user.email %> Not you?
+		<%= link_to 'Sign out', destroy_user_session_path, :method => :delete %>
+	<% else %>
+		<%= link_to 'Sign up', new_user_registration_path %> or <%= link_to 'sign in', new_user_session_path %>
+	<% end %> 
+
+	<p class="notice"><%= notice %></p>
+	<p class="alert"><%= alert %></p>
+
+	<div class="container">
+		<%= yield %>
+	</div>
+	<div class="container">
+		<div id="map-canvas"/>
+	</div>
+
+	<%= javascript_include_tag "https://maps.googleapis.com/maps/api/js?key=AIzaSyC4ji96n7hhtGhu0MqbJ6mLgwjXMbJoEMY&sensor=true" %>
+
+</body>
+</html>
