@@ -6,7 +6,7 @@
   <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
   <%= csrf_meta_tags %>
 
-  
+  <%= javascript_include_tag "https://maps.googleapis.com/maps/api/js?key=AIzaSyC4ji96n7hhtGhu0MqbJ6mLgwjXMbJoEMY&sensor=true" %>
 
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 	
@@ -30,11 +30,10 @@
 	<div class="container">
 		<%= yield %>
 	</div>
+
 	<div class="container">
 		<div id="map-canvas"/>
 	</div>
-
-	<%= javascript_include_tag "https://maps.googleapis.com/maps/api/js?key=AIzaSyC4ji96n7hhtGhu0MqbJ6mLgwjXMbJoEMY&sensor=true" %>
 
 </body>
 </html>

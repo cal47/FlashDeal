@@ -3,7 +3,6 @@ class RegistrationsController < Devise::RegistrationsController
 
   def create
     build_resource(sign_up_params)
-    debugger
     resource.add_role(params[:user][:roles])
 
     if resource.save
@@ -26,6 +25,6 @@ class RegistrationsController < Devise::RegistrationsController
   protected
 
     def configure_permitted_parameters
-      devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(:first_name, :email, :password) }
+      devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(:first_name, :email, :password, :street1, :city, :state, :zip, :latitude, :longitude) }
     end
 end

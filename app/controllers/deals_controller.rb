@@ -6,7 +6,7 @@ class DealsController < ApplicationController
     if current_user.has_role?(:vendor)
       return true
     else
-      redirect_to :root, error: "You don't have access to that action"
+      redirect_to :root, error: "You can't create deals"
     end
   end
 

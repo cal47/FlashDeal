@@ -1,5 +1,7 @@
 <p id="notice"><%= notice %></p>
 
+<h3>Nearby Deals</h3>
+
 <p>
   <strong>Deal:</strong>
   <%= @deal.deal %>
@@ -20,5 +22,69 @@
   <%= @deal.end_time %>
 </p>
 
+ <script type="text/javascript">
+
+    var initialLocation;
+    var siberia = new google.maps.LatLng(60, 105);
+    var newyork = new google.maps.LatLng(40.69847032728747, -73.9514422416687);
+    var browserSupportFlag =  new Boolean();
+
+    function initialize() {
+    	// alert('hello');
+      var myOptions = {
+        zoom: 8,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      };
+      var map = new google.maps.Map(document.getElementById("map-canvas"), myOptions);
+      var image = '/assets/smiley_happy.png';
+
+      // Try W3C Geolocation (Preferred)
+      if(navigator.geolocation) {
+        browserSupportFlag = true;
+        navigator.geolocation.getCurrentPosition(function(position) {
+          initialLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+          var Person_marker = new google.maps.Marker({
+            position: initialLocation,
+            title:"Where I am!",
+            map: map,
+            icon: image
+          });     
+          map.setCenter(initialLocation);
+        }, function() {
+          handleNoGeolocation(browserSupportFlag);
+        });
+      }
+      // Browser doesn't support Geolocation
+      else {
+        browserSupportFlag = false;
+        handleNoGeolocation(browserSupportFlag);
+      }
+
+      function handleNoGeolocation(errorFlag) {
+        if (errorFlag == true) {
+          alert("Geolocation service failed.");
+          initialLocation = newyork;
+        } else {
+          alert("Your browser doesn't support geolocation. We've placed you in Siberia.");
+          initialLocation = siberia;
+        }
+        map.setCenter(initialLocation);
+      }
+
+      var location = new google.maps.LatLng(<%= @deal.user.latitude %>, <%=@deal.user.longitude%>);
+    	var marker = new google.maps.Marker({
+        position: location,
+        map: map
+    	}); 
+    }
+
+    $(function() {
+      initialize();
+    })
+    </script>
+
+
+
+
 <%= link_to 'Edit', edit_deal_path(@deal) %> |
-<%= link_to 'Back', deals_path %>
+<%= link_to 'View All Deals', deals_path %>

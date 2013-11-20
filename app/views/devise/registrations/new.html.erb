@@ -4,7 +4,10 @@
   <%= devise_error_messages! %>
 
   <div><%= f.label :first_name %><br />
-  	<%= f.text_field :first_name, :value => "test name" %></div>
+  	<%= f.text_field :first_name, :value => "first" %></div>
+
+  <div><%= f.label :last_name %><br />
+    <%= f.text_field :last_name, :value => "last" %></div>
 
   <div><%= f.label :email %><br />
   <%= f.email_field :email, :autofocus => true, :value => "test@example.com" %></div>
@@ -18,6 +21,21 @@
   <div><%= f.label :account_type %><br />
 		<%= f.select :roles, options_for_select([["Choose One", nil], ["Vendor", "vendor"], ["Customer", "customer"]]) %>
 	</div>
+
+  <div>
+    <div><%= f.label :Street %><br />
+      <%= f.text_field :street1, :value => "16 Morgan Ave" %></div>
+
+    <div><%= f.label :City %><br />
+      <%= f.text_field :city, :value => "Brooklyn" %></div>
+
+    <div><%= f.label :State %><br />
+      <%= f.text_field :state, :value => "NY" %></div>
+
+    <div><%= f.label :Zip %><br />
+      <%= f.text_field :zip, :value => "11237" %></div>
+
+  </div>
 
   <div><%= f.submit "Sign up" %></div>
 <% end %>
