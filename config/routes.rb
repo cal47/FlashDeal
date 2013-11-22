@@ -3,6 +3,7 @@ FlashDeals::Application.routes.draw do
   get "user/show"
   get "user/edit"
   resources :deals
+ 
 
   devise_for :users, :controllers => {:registrations => "registrations"}
 

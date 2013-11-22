@@ -13,7 +13,17 @@ class DealsController < ApplicationController
   # GET /deals
   # GET /deals.json
   def index
-    @deals = Deal.all
+    @deals = Deal.includes(:user).find(:all, :order => "id desc", :limit => 3)
+    @ret_arr = []
+    @deals.each do |deal|
+      if deal.user
+        @ret_arr << deal.attributes.merge(deal.user.attributes.slice("latitude","longitude"))
+      else
+        @ret_arr << deal.attributes
+      end
+    end
+    @some_deals = @ret_arr.to_json.html_safe
+    # @deals = Deal.all
   end
 
   # GET /deals/1
@@ -24,6 +34,7 @@ class DealsController < ApplicationController
   # GET /deals/new
   def new
     @deal = Deal.new
+    
   end
 
   # GET /deals/1/edit
@@ -34,6 +45,7 @@ class DealsController < ApplicationController
   # POST /deals.json
   def create
     @deal = Deal.new(deal_params)
+    @deal.user_id = current_user.id
 
     respond_to do |format|
       if @deal.save
@@ -78,6 +90,6 @@ class DealsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def deal_params
-      params.require(:deal).permit(:deal, :description, :start_time, :end_time)
+      params.require(:deal).permit(:deal, :description, :start_time, :end_time, :user_id)
     end
 end

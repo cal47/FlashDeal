@@ -15,61 +15,87 @@
    
     <script type="text/javascript">
 
-    // var initialLocation;
-    // var siberia = new google.maps.LatLng(60, 105);
-    // var newyork = new google.maps.LatLng(40.69847032728747, -73.9514422416687);
-    // var browserSupportFlag =  new Boolean();
+    var initialLocation;
+    var siberia = new google.maps.LatLng(60, 105);
+    var newyork = new google.maps.LatLng(40.69847032728747, -73.9514422416687);
+    var browserSupportFlag =  new Boolean();
+    var allMyDeals = <%= @some_deals %>;
 
-    // function initialize() {
-    //   var myOptions = {
-    //     zoom: 6,
-    //     mapTypeId: google.maps.MapTypeId.ROADMAP
-    //   };
-    //   var map = new google.maps.Map(document.getElementById("map-canvas"), myOptions);
 
-    //   // Try W3C Geolocation (Preferred)
-    //   if(navigator.geolocation) {
-    //     browserSupportFlag = true;
-    //     navigator.geolocation.getCurrentPosition(function(position) {
-    //       initialLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
- 
+    function initialize() {
+      var myOptions = {
+        zoom: 13,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      };
+      var map = new google.maps.Map(document.getElementById("map-canvas"), myOptions);
+      var image = '/assets/smiley_happy.png'; 
+
+      // Try W3C Geolocation (Preferred)
+      if(navigator.geolocation) {
+        browserSupportFlag = true;
+        navigator.geolocation.getCurrentPosition(function(position) {
+          initialLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+          var Person_marker = new google.maps.Marker({
+            position: initialLocation,
+            title:"Where I am!",
+            map: map,
+            icon: image
+          });      
               
-    //       map.setCenter(initialLocation);
-    //     }, function() {
-    //       handleNoGeolocation(browserSupportFlag);
-    //     });
-    //   }
-    //   // Browser doesn't support Geolocation
-    //   else {
-    //     browserSupportFlag = false;
-    //     handleNoGeolocation(browserSupportFlag);
-    //   }
+          map.setCenter(initialLocation);
+        }, function() {
+          handleNoGeolocation(browserSupportFlag);
+        });
+      }
+      // Browser doesn't support Geolocation
+      else {
+        browserSupportFlag = false;
+        handleNoGeolocation(browserSupportFlag);
+      }
 
-    //   function handleNoGeolocation(errorFlag) {
-    //     if (errorFlag == true) {
-    //       alert("Geolocation service failed.");
-    //       initialLocation = newyork;
-    //     } else {
-    //       alert("Your browser doesn't support geolocation. We've placed you in Siberia.");
-    //       initialLocation = siberia;
-    //     }
-    //     map.setCenter(initialLocation);
-    //   }
-    // }
+      function handleNoGeolocation(errorFlag) {
+        if (errorFlag == true) {
+          alert("Geolocation service failed.");
+          initialLocation = newyork;
+        } else {
+          alert("Your browser doesn't support geolocation. We've placed you in Siberia.");
+          initialLocation = siberia;
+        }
+        map.setCenter(initialLocation);
+      }
+      var vendorIcons = [
+      '/assets/number_1.png',
+      '/assets/number_2.png',
+      '/assets/number_3.png',
+      '/assets/number_4.png',
+      '/assets/number_5.png'
+      ];
 
-    // $(function() {
-    //   initialize();
-    // })
+      for(var i=0; i < allMyDeals.length; i++){
+        var location = new google.maps.LatLng(allMyDeals[i].latitude, allMyDeals[i].longitude);
+        var marker = new google.maps.Marker({
+          position: location,
+          map: map,
+          icon: vendorIcons[i]
+        }); 
+      }
+    }
+
+    $(function() {
+      initialize();
+
+    })
     </script>
   </thead>
 
   <tbody>
-    <% @deals.each do |deal| %>
+    <% Deal.find(:all, :order => "id desc", :limit => 3).reverse.each do |deal|  %>
+   
       <tr>
         <td><%= deal.deal %></td>
         <td><%= deal.description %></td>
-        <td><%= deal.start_time %></td>
-        <td><%= deal.end_time %></td>
+        <!-- <td><%= deal.start_time %></td>
+        <td><%= deal.end_time %></td> -->
         <td><%= link_to 'Show', deal %></td>
         <td><%= link_to 'Edit', edit_deal_path(deal) %></td>
         <td><%= link_to 'Destroy', deal, method: :delete, data: { confirm: 'Are you sure?' } %></td>
