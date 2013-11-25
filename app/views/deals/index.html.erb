@@ -24,7 +24,7 @@
 
     function initialize() {
       var myOptions = {
-        zoom: 13,
+        zoom: 14,
         mapTypeId: google.maps.MapTypeId.ROADMAP
       };
       var map = new google.maps.Map(document.getElementById("map-canvas"), myOptions);
@@ -39,6 +39,7 @@
             position: initialLocation,
             title:"Where I am!",
             map: map,
+            animation: google.maps.Animation.DROP,
             icon: image
           });      
               
@@ -63,20 +64,25 @@
         }
         map.setCenter(initialLocation);
       }
-      var vendorIcons = [
-      '/assets/number_1.png',
-      '/assets/number_2.png',
-      '/assets/number_3.png',
-      '/assets/number_4.png',
-      '/assets/number_5.png'
-      ];
+
+      //don't need this - replaced with the icon code below
+      // var vendorIcons = [
+      // '/assets/number_1.png',
+      // '/assets/number_2.png',
+      // '/assets/number_3.png',
+      // '/assets/number_4.png',
+      // '/assets/number_5.png'
+      // ];
 
       for(var i=0; i < allMyDeals.length; i++){
+        var num = i+1;
         var location = new google.maps.LatLng(allMyDeals[i].latitude, allMyDeals[i].longitude);
         var marker = new google.maps.Marker({
           position: location,
           map: map,
-          icon: vendorIcons[i]
+          animation: google.maps.Animation.DROP,
+          icon: '/assets/number_' + num + '.png'
+          // icon: vendorIcons[i]
         }); 
       }
     }
@@ -89,7 +95,7 @@
   </thead>
 
   <tbody>
-    <% Deal.find(:all, :order => "id desc", :limit => 3).reverse.each do |deal|  %>
+    <% Deal.find(:all, :order => "id desc", :limit => 3).each do |deal|  %>
    
       <tr>
         <td><%= deal.deal %></td>
