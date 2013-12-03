@@ -8,6 +8,7 @@ gem 'devise'
 gem 'rolify'
 gem 'awesome_print'
 gem 'geocoder'
+gem 'twilio-ruby'
 
 gem 'debugger'
 # Use sqlite3 as the database for Active Record in development

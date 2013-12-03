@@ -14,7 +14,7 @@ class User < ActiveRecord::Base
   after_validation :geocode, if: :address_change
 
   def user_params 
-  	params.require(:user).permit(:first_name, :last_name, :email, :street1, :street2, :city, :state, :zip, :latitude, :longitude)
+  	params.require(:user).permit(:first_name, :last_name, :email, :street1, :street2, :city, :state, :zip, :latitude, :longitude, :phone)
   end
 
   # attr_accessible :role_ids
