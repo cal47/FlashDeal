@@ -10,20 +10,40 @@ class DealsController < ApplicationController
     end
   end
 
+  # def initialize(attributes = nil)
+  #   attr_with_defaults  
+  # end
+
+  def current_deals
+    if params[:start_time] && params[:end_time]
+     @deals = Deals.find(:all, :conditions => {:dateTime.now => start_date..end_date})
+    end
+  end
+
   # GET /deals
   # GET /deals.json
   def index
-    @deals = Deal.includes(:user).find(:all, :order => "id desc", :limit => 3)
-    @ret_arr = []
-    @deals.each do |deal|
-      if deal.user
-        @ret_arr << deal.attributes.merge(deal.user.attributes.slice("latitude","longitude"))
-      else
-        @ret_arr << deal.attributes
-      end
-    end
-    @some_deals = @ret_arr.to_json.html_safe
-    # @deals = Deal.all
+    @deals = Deal.all
+    # OLD CODE--- this will give me the first 3 deals in the db
+    # @limit_deals = Deal.find(:all, :order => "id desc", :limit =>3)
+    # @ret_array = []
+    # @deals.each do |deal|
+    #   @ret_array << deal.attributes
+    # end
+    # @some_deals = @ret_array.to_json.html_safe
+
+    # THE CODE BELOW IS FROM BEFORE THE ADDRESS WAS REMOVED FROM THE USER AND PLACED ON THE DEAL
+    # @deals = Deal.includes(:user).find(:all, :order => "id desc", :limit => 3)
+    # @ret_arr = []
+    # @deals.each do |deal|
+    #   if deal.user
+    #     @ret_arr << deal.attributes.merge(deal.user.attributes.slice("latitude","longitude"))
+    #   else
+    #     @ret_arr << deal.attributes
+    #   end
+    # end
+    # @some_deals = @ret_arr.to_json.html_safe
+    # # @deals = Deal.all
   end
 
   # GET /deals/1
@@ -34,7 +54,10 @@ class DealsController < ApplicationController
   # GET /deals/new
   def new
     @deal = Deal.new
-    
+    @deal.street1 = current_user.street1
+    @deal.city = current_user.city
+    @deal.state = current_user.state
+    @deal.zip = current_user.zip
   end
 
   # GET /deals/1/edit
@@ -82,6 +105,15 @@ class DealsController < ApplicationController
     end
   end
 
+  def nearby
+    latitude = params[:latitude]
+    longitude = params[:longitude]
+    d = Deal.where("start_time <= :now AND end_time >= :now", {now: DateTime.now}, :order => "id desc", :limit =>3)
+    deals_nearby = d.near([latitude, longitude], 3)
+    render json: deals_nearby
+    # render json: {:latitude => latitude}
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_deal
@@ -90,6 +122,6 @@ class DealsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def deal_params
-      params.require(:deal).permit(:deal, :description, :start_time, :end_time, :user_id)
+      params.require(:deal).permit(:deal, :description, :start_time, :end_time, :user_id, :street1, :city, :state, :zip, :address)
     end
 end

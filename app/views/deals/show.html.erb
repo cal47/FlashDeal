@@ -72,7 +72,7 @@
         map.setCenter(initialLocation);
       }
 
-      var location = new google.maps.LatLng(<%= @deal.user.latitude %>, <%=@deal.user.longitude%>);
+      var location = new google.maps.LatLng(<%= @deal.latitude %>, <%=@deal.longitude%>);
     	var marker = new google.maps.Marker({
         position: location,
         map: map

@@ -19,6 +19,20 @@
     <%= f.label :description %><br>
     <%= f.text_area :description %>
   </div>
+
+  <%= f.label :street_1 %>
+  <%= f.text_field  :street1 %>
+
+  <%= f.label :city %>
+  <%= f.text_field :city %>
+
+  <%= f.label :state %>
+  <%= f.text_field :state %>
+
+  <%= f.label :zip %>
+  <%= f.text_field :zip %>
+
+
   <div class="field">
     <%= f.label :start_time %><br>
     <%= f.datetime_select :start_time %>
@@ -27,6 +41,8 @@
     <%= f.label :end_time %><br>
     <%= f.datetime_select :end_time %>
   </div>
+
+
   <div class="actions">
     <%= f.submit %>
   </div>

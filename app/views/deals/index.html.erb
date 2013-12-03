@@ -20,7 +20,7 @@
     var siberia = new google.maps.LatLng(60, 105);
     var newyork = new google.maps.LatLng(40.69847032728747, -73.9514422416687);
     var browserSupportFlag =  new Boolean();
-    var allMyDeals = <%= @some_deals %>;
+    var dealsNearby = [];
 
 
     function initialize() {
@@ -42,6 +42,27 @@
             map: map,
             animation: google.maps.Animation.DROP,
             icon: image
+          }); 
+
+          $.ajax('/deals/nearby',{
+            type: "GET",
+            dataType: "json",
+            data: {latitude: position.coords.latitude, longitude: position.coords.longitude},
+            success: function(data){
+              map_deals(data);
+              // console.log(data);
+              // console.log(data.length);
+              $("#nearby-deals").html("");
+              // $("#nearby-deals").html("<table>");
+              for(var i =0; i< data.length; i++) {
+                $("#nearby-deals").append("<tr>");
+                $("#deal-name").append("<b>"+(i+1)+") "+data[i].deal+" </b></td>");
+                $("#deal-description").append("<td>"+data[i].description+"</td>");
+                $("#deal-countdown").append(dealTimer(data[i].end_time));
+                $("#nearby-deals").append("</tr>");
+              }
+              $("#nearby-deals").append("</table>");
+            }
           });      
               
           map.setCenter(initialLocation);
@@ -66,8 +87,36 @@
         map.setCenter(initialLocation);
       }
 
-    //drop the pins consecutively - later
+      function dealTimer(expiration){
+        var target_date = Math.floor(Date.parse(expiration));
+        var days, hours, minutes, seconds, countdown;
 
+        var countdown = document.getElementById("deal-countdown");
+
+        // update the tag with id "countdown" every 1 second
+        setInterval(function () {
+          // find the amount of "seconds" between now and target
+          var current_date = new Date().getTime();
+          var seconds_left = (target_date - current_date) / 1000;
+
+          // do some time calculations
+          days = parseInt(seconds_left / 86400);
+          seconds_left = seconds_left % 86400;
+
+          hours = parseInt(seconds_left / 3600);
+          seconds_left = seconds_left % 3600;
+
+          minutes = parseInt(seconds_left / 60);
+          seconds = parseInt(seconds_left % 60);
+
+          // format countdown string + set tag value
+          countdown.innerHTML = days + "d, " + hours + "h, "
+          + minutes + "m, " + seconds + "s";  
+
+        }, 1000);
+      }
+
+    // drop the pins consecutively - later
     // function drop() {
     //   for (var i = 0; i < allMyDeals.length; i++) {
     //     setTimeout(function() {
@@ -76,19 +125,20 @@
     //     }
     //   }
 
-      // var descriptions = [];
-      // var dealMarkers = [];
-        for(var i=0; i < allMyDeals.length; i++){
+        function map_deals(dealsNearby){
+
+        for(var i=0; i < dealsNearby.length; i++){
           var num = i+1;
-          var location = new google.maps.LatLng(allMyDeals[i].latitude, allMyDeals[i].longitude);
+          var location = new google.maps.LatLng(dealsNearby[i].latitude, dealsNearby[i].longitude);
           var dealMarker = new google.maps.Marker({
             position: location,
             map: map,
             animation: google.maps.Animation.DROP,
             icon: '/assets/number_' + num + '.png',
-            title: allMyDeals[i].deal,
-            content: allMyDeals[i].description
+            title: dealsNearby[i].deal,
+            content: dealsNearby[i].description
           });
+        }
 
           function closeInfos(){
             if(infos.length > 0){
@@ -128,21 +178,31 @@
     </script>
   </thead>
 
-  <tbody>
-    <% Deal.find(:all, :order => "id desc", :limit => 3).each do |deal|  %>
-   
-      <tr>
-        <td><%= deal.deal %></td>
-        <td><%= deal.description %></td>
-        <!-- <td><%= deal.start_time %></td>
-        <td><%= deal.end_time %></td> -->
-        <td><%= link_to 'Show', deal %></td>
-        <td><%= link_to 'Edit', edit_deal_path(deal) %></td>
-        <td><%= link_to 'Destroy', deal, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
+  <tbody id="nearby-deals-table">
+
+    <% if false %>
+      <% Deal.find(:all, :order => "id desc", :limit => 3).each do |deal|  %>
+        <tr>
+          <td><%= deal.deal %></td>
+          <td><%= deal.description %></td>
+          <td><%= link_to 'Show', deal %></td>
+          <td><%= link_to 'Edit', edit_deal_path(deal) %></td>
+          <td><%= link_to 'Destroy', deal, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        </tr>
+
+       <% end %>
+     <% end %>
   </tbody>
-</table>
+
+<div id='nearby-deals' class='container'>
+  Loading...<br>
+    <img src="http://fc03.deviantart.net/fs71/f/2013/003/6/9/partart_loading_boredoom_6_by_g2k2007-d5q8zyt.gif" style="width:100px;"><br>
+  <table id="deal-list">
+    <td id="deal-name"></td>
+    <td id="deal-description"></td>
+    <td id="deal-countdown"></td>
+  </table>
+</div>
 
 <br>
 
