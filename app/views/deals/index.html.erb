@@ -58,14 +58,23 @@
               // console.log(data);
               // console.log(data.length);
               $("#nearby-deals").html("");
-              $("#nearby-deals").html("<table>");
+              var $table = $("<table><tr style='font-weight:bold'><td id='deal-name'>Deal Name</td><td id='deal-description'>Description</td><td><span id='deal-countdown'>Countdown</span></td></tr></table>");
               for(var i =0; i< data.length; i++) {
-                $("#nearby-deals").append("<tr>");
-                $("#deal-name").append("<b>"+(i+1)+") "+data[i].deal+" </b></td>");
-                $("#deal-description").append("<td>"+data[i].description+"</td>");
-                $("#deal-countdown").append(dealTimer(data[i].end_time)+"</tr>");
+                // var $tr = $("#nearby-deals").append("<tr>");
+                // $tr.append($('#deal-name <td/>').html("<b>"+data[i].deal+" </b>"));
+                // $tr.append($('<td/>').html(data[i].description+" "));
+                // $tr.append($('<td/>').html(dealTimer(data[i].end_time)+"</tr>"));
+                // $('.list-order tr:last').before($tr);
+
+                var $tr = $('<tr></tr>');
+                $tr.append("<td>"+data[i].deal+"</td>");
+                $tr.append("<td>"+data[i].description+"</td>");
+                $tr.append(dealTimer(data[i].end_time));
+                $table.append($tr);
+
               }
-              $("#nearby-deals").append("</table>");
+              $("#nearby-deals").html($table);
+
             }
           });      
               
@@ -92,10 +101,11 @@
       }
 
       function dealTimer(expiration){
+        // var self = $(expiration)
         var target_date = Math.floor(Date.parse(expiration));
         var days, hours, minutes, seconds, countdown;
 
-        var countdown = document.getElementById("deal-countdown");
+        var countdown = $("<td class='deal-countdown'></td>");
 
         // update the tag with id "countdown" every 1 second
         setInterval(function () {
@@ -114,10 +124,11 @@
           seconds = parseInt(seconds_left % 60);
 
           // format countdown string + set tag value
-          countdown.innerHTML = days + "d, " + hours + "h, "
-          + minutes + "m, " + seconds + "s";  
+          countdown.html(days + "d, " + hours + "h, "
+          + minutes + "m, " + seconds + "s");  
 
         }, 1000);
+        return countdown;
       }
 
       function map_deals(dealsNearby){
@@ -169,14 +180,10 @@
     <center>
       <img src="http://fc03.deviantart.net/fs71/f/2013/003/6/9/partart_loading_boredoom_6_by_g2k2007-d5q8zyt.gif" style="width:100px;"><br>
     </center>
-  <table id="deal-list">
-    <td id="deal-name"></td>
-    <td id="deal-description"></td>
-    <td id="deal-countdown"></td>
-  </table>
+
 </div>
 
 <br>
 
-<%= link_to 'New Deal', new_deal_path %>
+<%= button_to 'New Deal', new_deal_path, :class =>"btn", :style => "margin-bottom: 10px", :method => "get" %>
 

@@ -16,9 +16,12 @@ height: 400px;
 width: 800px;
 }
 
-// change colors
-$link-color: red;
 
-// import original bootstrap
-@import "twitter/bootstrap";
+#nearby-deals { 
+	td {
+		padding: 10px;
+	}
+}
+
+
 
