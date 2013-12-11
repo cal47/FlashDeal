@@ -118,15 +118,6 @@
         }, 1000);
       }
 
-    // drop the pins consecutively - later
-    // function drop() {
-    //   for (var i = 0; i < allMyDeals.length; i++) {
-    //     setTimeout(function() {
-    //       addMarker();
-    //       }, i * 200);
-    //     }
-    //   }
-
       function map_deals(dealsNearby){
         for(var i=0; i < dealsNearby.length; i++){
           var num = i+1;
@@ -140,7 +131,7 @@
           });
           google.maps.event.addListener(dealMarker, 'click', (function(dealMarker, i) {
             return function(){
-              infowindow.setContent(dealsNearby[i].description);
+              infowindow.setContent('<div style="height:50px; width: 100px;">'+dealsNearby[i].description+"</div>");
               infowindow.open(map,dealMarker);
             }
           })(dealMarker, i));

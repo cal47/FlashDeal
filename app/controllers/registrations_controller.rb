@@ -6,7 +6,7 @@ class RegistrationsController < Devise::RegistrationsController
     resource.add_role(params[:user][:roles])
 
     if resource.save
-      # render text: "Thank you! You will receive an SMS shortly with verification instructions."
+      render text: "Thank you for registering! You will receive a text message shortly with verification instructions."
       
         # Instantiate a Twilio client
         client = Twilio::REST::Client.new(TWILIO_CONFIG['sid'], TWILIO_CONFIG['token'])
@@ -20,7 +20,6 @@ class RegistrationsController < Devise::RegistrationsController
       yield resource if block_given?
       if resource.active_for_authentication?
         
-
         set_flash_message :notice, :signed_up if is_flashing_format?
         sign_up(resource_name, resource)
         respond_with resource, :location => after_sign_up_path_for(resource)
