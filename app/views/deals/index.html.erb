@@ -15,17 +15,20 @@
    
     <script type="text/javascript">
 
-    var initialLocation;
-    var infos = [];
-    var siberia = new google.maps.LatLng(60, 105);
-    var newyork = new google.maps.LatLng(40.69847032728747, -73.9514422416687);
-    var browserSupportFlag =  new Boolean();
-    var dealsNearby = [];
-    var infowindow = new google.maps.InfoWindow();
+    
     
 
 
     function initialize() {
+
+      var initialLocation;
+      var infos = [];
+      var siberia = new google.maps.LatLng(60, 105);
+      var newyork = new google.maps.LatLng(40.69847032728747, -73.9514422416687);
+      var browserSupportFlag =  new Boolean();
+      var dealsNearby = [];
+      var infowindow = new google.maps.InfoWindow();
+
       var myOptions = {
         zoom: 14,
         mapTypeId: google.maps.MapTypeId.ROADMAP
@@ -55,13 +58,12 @@
               // console.log(data);
               // console.log(data.length);
               $("#nearby-deals").html("");
-              // $("#nearby-deals").html("<table>");
+              $("#nearby-deals").html("<table>");
               for(var i =0; i< data.length; i++) {
                 $("#nearby-deals").append("<tr>");
                 $("#deal-name").append("<b>"+(i+1)+") "+data[i].deal+" </b></td>");
                 $("#deal-description").append("<td>"+data[i].description+"</td>");
-                $("#deal-countdown").append(dealTimer(data[i].end_time));
-                $("#nearby-deals").append("</tr>");
+                $("#deal-countdown").append(dealTimer(data[i].end_time)+"</tr>");
               }
               $("#nearby-deals").append("</table>");
             }
@@ -162,9 +164,11 @@
      <% end %>
   </tbody>
 
-<div id='nearby-deals' class='container'>
+  <div id='nearby-deals' class='container'>
   Loading...<br>
-    <img src="http://fc03.deviantart.net/fs71/f/2013/003/6/9/partart_loading_boredoom_6_by_g2k2007-d5q8zyt.gif" style="width:100px;"><br>
+    <center>
+      <img src="http://fc03.deviantart.net/fs71/f/2013/003/6/9/partart_loading_boredoom_6_by_g2k2007-d5q8zyt.gif" style="width:100px;"><br>
+    </center>
   <table id="deal-list">
     <td id="deal-name"></td>
     <td id="deal-description"></td>

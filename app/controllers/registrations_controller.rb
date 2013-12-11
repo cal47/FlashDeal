@@ -6,7 +6,7 @@ class RegistrationsController < Devise::RegistrationsController
     resource.add_role(params[:user][:roles])
 
     if resource.save
-      render text: "Thank you for registering! You will receive a text message shortly with verification instructions."
+      #render text: "Thank you for registering! You will receive a text message shortly with verification instructions."
       
         # Instantiate a Twilio client
         client = Twilio::REST::Client.new(TWILIO_CONFIG['sid'], TWILIO_CONFIG['token'])

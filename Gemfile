@@ -10,6 +10,9 @@ gem 'awesome_print'
 gem 'geocoder'
 gem 'twilio-ruby'
 
+# Bootstrap
+gem "twitter-bootstrap-rails"
+
 gem 'debugger'
 # Use sqlite3 as the database for Active Record in development
 group :development do  
